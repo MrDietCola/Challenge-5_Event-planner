@@ -26,11 +26,11 @@
 
   // TODO: Add code to display the current date in the header of the page.
 
-
+$( document ).ready(function() {
 // variable to get current hour of the day in a number out of 24
 var currentHour = dayjs().format('HH');
 // variable to get current time to display to page in a standard way
-var displayTime = dayjs().format("MMM d, YYYY [at] hh:mm:ss a");
+var displayTime = dayjs().format("MMM D, YYYY [at] hh:mm:ss a");
 // variable for the paragraph element on the html to put the time of day
 var currentTimeP = $('#currentDay')
 currentTimeP.text(displayTime)
@@ -40,7 +40,7 @@ currentTimeP.text(displayTime)
 function updateHour() {
   setInterval(function() {
     currentHour = dayjs().format('HH');
-    displayTime = dayjs().format("MMM d, YYYY [at] hh:mm:ss a");
+    displayTime = dayjs().format("MMM D, YYYY [at] hh:mm:ss a");
     currentTimeP.text(displayTime)
     compareTime()
   }, 1000);
@@ -77,13 +77,15 @@ saveBtn.on('click', function (event) {
 // corrisponding input value and id of the parent
   var btnClicked = $(event.target);
   var parent = btnClicked.parent().parent()
-  var task = parent.children().eq(1).val()
+  var task = parent.children().eq(1).val() || " ";
   var parentId = btnClicked.parent().parent().attr('id')
 // creates variable to add to array of stored tasks
   var taskObj = {
     task: task,
     parent: parentId,
   };  
+
+
 // compares stored tasks and new task if there are any hours with two tasks saved and deletes
 // whichever task was added earlier in the array
   for (i=0; i < storedTasks.length; i++ ) {
@@ -104,9 +106,9 @@ function restoreTasks() {
     var text = storedTasks[i].task
     $('#' + id).children().eq(1).val(text)
   }
-  console.log(storedTasks);
 }
 
 restoreTasks();
 compareTime();
 updateHour();
+});
