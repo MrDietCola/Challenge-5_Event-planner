@@ -1,8 +1,8 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
+// localStorage.clear();
 
-$(function () {
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
@@ -24,7 +24,6 @@ $(function () {
   
 
   // TODO: Add code to display the current date in the header of the page.
-});
 
 
 var currentHour = dayjs().format('HH');
@@ -60,24 +59,49 @@ function compareTime() {
   });
 }
 
-compareTime()
-updateHour()
 
 var saveBtn = $('.btn')
+var storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
 saveBtn.on('click', function (event) {
   var btnClicked = $(event.target);
   var parent = btnClicked.parent().parent()
   var task = parent.children().eq(1).val()
-  console.log(task);
-  console.log(parent);
-
+  var parentId = btnClicked.parent().parent().attr('id')
+  // console.log(task);
+  // console.log(parentId);
+  
   var taskObj = {
-      task: task,
-      parent: parent,
-  };
+    task: task,
+    parent: parentId,
+  };  
+  
+  for (i=0; i < storedTasks.length; i++ ) {
+    if (taskObj.parent === storedTasks[i].parent) {
+      storedTasks.splice(i, 1)
+      // console.log(storedTasks);
+    }
+  }
 
-  var storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    storedTasks.unshift((taskObj));
-    localStorage.setItem("tasks", (JSON.stringify(storedTasks)));
-    console.log(storedTasks);
+  // storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  storedTasks.push((taskObj));
+  localStorage.setItem("tasks", (JSON.stringify(storedTasks)));
+  // console.log(storedTasks);
+    
+  restoreTasks()
 });
+
+function restoreTasks() {
+  for (i=0; i < storedTasks.length; i++ ) {
+    var id = storedTasks[i].parent
+    var text = storedTasks[i].task
+    // console.log(id);
+    // console.log(text);
+    $('#' + id).children().eq(1).val(text)
+  }
+  console.log(storedTasks);
+}
+
+restoreTasks();
+compareTime();
+updateHour();
