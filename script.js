@@ -1,6 +1,7 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
+
 // localStorage.clear();
 
   // TODO: Add a listener for click events on the save button. This code should
@@ -26,11 +27,16 @@
   // TODO: Add code to display the current date in the header of the page.
 
 
+// variable to get current hour of the day in a number out of 24
 var currentHour = dayjs().format('HH');
+// variable to get current time to display to page in a standard way
 var displayTime = dayjs().format("MMM d, YYYY [at] hh:mm:ss a");
+// variable for the paragraph element on the html to put the time of day
 var currentTimeP = $('#currentDay')
 currentTimeP.text(displayTime)
 
+// interval timer to update the clock on top of page every second and to run compare time so 
+// so that the backgrounds of the tasks will change when the hour is updated
 function updateHour() {
   setInterval(function() {
     currentHour = dayjs().format('HH');
@@ -40,9 +46,12 @@ function updateHour() {
   }, 1000);
 }
 
+// compares the number in the id to the current hour to update the background color
 function compareTime() {
+// for each tag with class .row, create a variable of last two characters (should be numbers of time out of 24)
   $('.row').each(function () {
     var hour = $(this).attr('id').slice(-2)
+// compares that variable to current hour and adjusts add or removes appropriate class compared to current hour of day
     if (hour > currentHour) {
       $(this).removeClass('past')
       $(this).removeClass('present')
@@ -59,44 +68,40 @@ function compareTime() {
   });
 }
 
-
+// variables for listen event and getting local storage
 var saveBtn = $('.btn')
 var storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 saveBtn.on('click', function (event) {
+// when button clicked set the targeted button as a variable and navigate dom to get the 
+// corrisponding input value and id of the parent
   var btnClicked = $(event.target);
   var parent = btnClicked.parent().parent()
   var task = parent.children().eq(1).val()
   var parentId = btnClicked.parent().parent().attr('id')
-  // console.log(task);
-  // console.log(parentId);
-  
+// creates variable to add to array of stored tasks
   var taskObj = {
     task: task,
     parent: parentId,
   };  
-  
+// compares stored tasks and new task if there are any hours with two tasks saved and deletes
+// whichever task was added earlier in the array
   for (i=0; i < storedTasks.length; i++ ) {
     if (taskObj.parent === storedTasks[i].parent) {
       storedTasks.splice(i, 1)
-      // console.log(storedTasks);
     }
   }
-
-  // storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+// adds new task to array and sends to local storage
   storedTasks.push((taskObj));
   localStorage.setItem("tasks", (JSON.stringify(storedTasks)));
-  // console.log(storedTasks);
     
   restoreTasks()
 });
-
+// reloads all of the currently stored tasks
 function restoreTasks() {
   for (i=0; i < storedTasks.length; i++ ) {
     var id = storedTasks[i].parent
     var text = storedTasks[i].task
-    // console.log(id);
-    // console.log(text);
     $('#' + id).children().eq(1).val(text)
   }
   console.log(storedTasks);
