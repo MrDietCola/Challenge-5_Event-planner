@@ -6,7 +6,7 @@ https://mrdietcola.github.io/Challenge-5_Event-planner/
 
 
 
-![screenshot](<Screenshot (10).png>)
+![screenshot](<Screenshot (13).png>)
 ## Installation
 
 N/A

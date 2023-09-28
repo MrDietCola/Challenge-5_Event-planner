@@ -69,22 +69,27 @@ function compareTime() {
 }
 
 // variables for listen event and getting local storage
-var saveBtn = $('.btn')
+var saveBtn = $('.saveBtn')
 var storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 saveBtn.on('click', function (event) {
+  event.stopPropagation();
 // when button clicked set the targeted button as a variable and navigate dom to get the 
 // corrisponding input value and id of the parent
   var btnClicked = $(event.target);
   var parent = btnClicked.parent().parent()
-  var task = parent.children().eq(1).val() || " ";
   var parentId = btnClicked.parent().parent().attr('id')
+  if (parentId === undefined) {
+    parentId = btnClicked.parent().attr('id')
+    parent = btnClicked.parent()
+  }
+  console.log(parentId);
+  var task = parent.children().eq(1).val() || " ";
 // creates variable to add to array of stored tasks
   var taskObj = {
     task: task,
     parent: parentId,
   };  
-
 
 // compares stored tasks and new task if there are any hours with two tasks saved and deletes
 // whichever task was added earlier in the array
@@ -96,16 +101,18 @@ saveBtn.on('click', function (event) {
 // adds new task to array and sends to local storage
   storedTasks.push((taskObj));
   localStorage.setItem("tasks", (JSON.stringify(storedTasks)));
-    
   restoreTasks()
 });
+
 // reloads all of the currently stored tasks
 function restoreTasks() {
+  storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
   for (i=0; i < storedTasks.length; i++ ) {
     var id = storedTasks[i].parent
     var text = storedTasks[i].task
     $('#' + id).children().eq(1).val(text)
   }
+  console.log(storedTasks);
 }
 
 restoreTasks();
