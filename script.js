@@ -112,7 +112,6 @@ function restoreTasks() {
     var text = storedTasks[i].task
     $('#' + id).children().eq(1).val(text)
   }
-  console.log(storedTasks);
 }
 
 restoreTasks();
