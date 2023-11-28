@@ -1,6 +1,6 @@
 # Challenge-5_Event-planner
 
-https://mrdietcola.github.io/Challenge-5_Event-planner/
+https://Seidler93.github.io/Challenge-5_Event-planner/
 
 ## Description
 This is a responsive event planner that allows the user to input a task in each available hour of the work day. The app will dynamically change color based off of the current hour of the day and change the color of task to indicate whether the task is in the past, present or future. 
